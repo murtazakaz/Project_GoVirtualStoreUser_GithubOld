@@ -10,7 +10,15 @@
         <script type="text/javascript" src="lib/jquery-mobile/js/jquery.mobile-1.4.0.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/index.css">
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-	
+	 <link href="css/bootstrap.min.css" rel="stylesheet">
+
+        <link href="css/form.css" rel="stylesheet">
+
+        <link href="css/style.css" rel="stylesheet">
+
+        <link href="css/animate.css" rel="stylesheet">
+
+        <link href="css/generics.css" rel="stylesheet"> 
 		<link rel="stylesheet" type="text/css" href="css/jqm-icon-pack-fa.css">
         <title>Go Virtual</title>
         <script type="text/javascript" src="cordova.js"></script>
@@ -87,6 +95,20 @@
 		</script>
 	<script>
 
+	function loadhide(){
+
+	$("#loader").hide();
+	
+	$("#loadertxt").hide();
+
+	}
+	function loadshow(){
+
+	$("#loader").show();
+	$("#loadertxt").show();
+	}
+	
+	
 function getdestinationcitycode()
 {
   var destination = $("#destination").val();
@@ -99,6 +121,7 @@ function getdestinationcitycode()
                 dataType: "jsonp",
                 success: function (response) {
                     var str = response;
+				
 					<!-- console.log(response); -->
 							
 					<!-- var tt; -->
@@ -213,9 +236,10 @@ function v()
 }
 
 function flightdetails()
-{  alert("haha"); }
+{  }
 function getflightdetails()
 {
+
 var adultcount = getParameterByName('adultcount'); 
 var childrencount = getParameterByName('childrencount');
 var infantscount = getParameterByName('infantscount'); 
@@ -288,7 +312,7 @@ request.onreadystatechange = function () {
 <!-- }	   -->
 ////////
 
-
+loadhide();
 var trip_option= data.trips.tripOption;
 var count = 0;
 
@@ -345,7 +369,7 @@ for(i in trip_option)
 						var newchar = ' ';
 						cabin = mystring.split('_').join(newchar);
 						
-                       tt =  "<a onclick='flightdetails()'><div class='col-md-12 col-sm-12 col-xs-12' style='margin-bottom: 5px;background-color:rgba(255, 160, 18, 0.5); border-radius: 10px; text-shadow: none;color: white;'><center><div class='col-md-4 col-sm-4 col-xs-4'> <p id='deptime'>"+deptime+"</p><p id='deptorigin'><img src='img/flightdep.png'/> "+leg[l].origin +"</p><p>"+segment[k].flight.carrier+"  "+segment[k].flight.number+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr> </p><p id='flightstops'>"+duration_time+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>"+arrtime+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+leg[l].destination+"</p><p>"+cabin+"</p></div></center></div></a>";
+                       tt =  "<a onclick='flightdetails()'><div class='col-md-12 col-sm-12 col-xs-12' style='margin-bottom: 5px;background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white;'><center><div class='col-md-4 col-sm-4 col-xs-4'> <p id='deptime'>"+deptime+"</p><p id='deptorigin'><img src='img/flightdep.png'/> "+leg[l].origin +"</p><p>"+segment[k].flight.carrier+"  "+segment[k].flight.number+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr> </p><p id='flightstops'>"+duration_time+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>"+arrtime+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+leg[l].destination+"</p><p>"+cabin+"</p></div></center></div></a>";
                        $("#wrapper").append(tt);
 							
 						}
@@ -477,7 +501,7 @@ for(i in trip_option)
 			   }
 			   
 			   
-			      tt =  "<div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+departure_time1+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +origin1+"</p><p>"+carrier_name1+"  "+carrier_no1+"/"+carrier_name2+"  "+carrier_no2+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+total_duration+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrival_time2+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+destination2+"</p><p>"+cabin1+"</p></div></center></div><br><br><br><br><br>";
+			      tt =  "<div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+departure_time1+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +origin1+"</p><p>"+carrier_name1+"  "+carrier_no1+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+total_duration+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrival_time2+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+destination2+"</p><p>"+cabin1+"</p></div></center></div><br><br><br><br><br>";
 				  $("#wrapper1").append(tt);
 			   }
 			}
@@ -598,7 +622,9 @@ getflightdetails();
 						<div id="nonstop" style="color: white;">
 					</div>
 						
-						
+						<div id="loader" class="ball"></div>
+						<br>
+					<center><p style="color:white;" id="loadertxt">Checking Flight details...</p></center>
                            <!-- <div> <input style="color: black;" placeholder="Flying From" type="text" id="origin"  list="originCode" onkeyup="getorigincitycode();"/> -->
 						<!-- <datalist id="originCode"> -->
 						<!-- </datalist> -->
