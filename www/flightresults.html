@@ -109,116 +109,27 @@
 	}
 	
 	
-function getdestinationcitycode()
+function getflightname(carrier_name1)
 {
-  var destination = $("#destination").val();
- var destination_array = [];
+
  $.ajax({
                 type: "GET",
-                url: "https://iatacodes.org/api/v6/autocomplete.jsonp?api_key=a33d6719-c3bb-469c-8747-12da8ff944f3&query="+destination+"",
-                cache: false,
+                url: "https://iatacodes.org/api/v6/airlines.jsonp?api_key=a33d6719-c3bb-469c-8747-12da8ff944f3&code="+carrier_name1+"",
+                <!-- cache: false, -->
                 crossDomain: true,
                 dataType: "jsonp",
                 success: function (response) {
-                    var str = response;
-				
-					<!-- console.log(response); -->
-							
-					<!-- var tt; -->
-					for (i in str)
-                    {
-                      <!-- console.log(str[i].airports); -->
-					   var obj = str[i].airports;
-					   var obj2 = str[i].cities;
-
-					   for(j in obj , obj2){
-					     <!-- console.log(obj[j].code);  -->
-						  <!-- console.log(obj[j].name); -->
-							<!-- console.log(obj[j].country_name); -->
-							code = obj[j].code;
-							country = obj[j].country_name;
-							airport = obj[j].name;
-							city = obj2[j].name;
-							<!-- document.getElementById("citycode").innerHTML ="Country : " +country; -->
-							<!-- document.getElementById("country").innerHTML ="City Code : " + code; -->
-							<!-- document.getElementById("airport").innerHTML ="Airport : " + airport; -->
-							
-
-							<!-- console.log(destination_array.join()); -->
-							destination_array.splice(j, 0, city +", "+ airport + ", " + country + "~" + code);
-							<!-- console.log(destination_array[j]); -->
-
-						 }
-                    }
-						var sel = document.getElementById('destinationCode');
-						
-						for(var i = 0; i < destination_array.length; i++) {
-							var opt = document.createElement('option');
-							opt.innerHTML = destination_array[i];
-							opt.value = destination_array[i];
-							sel.appendChild(opt);
-						}
+                   
+				   str = response;
+				   
+				   
+				   
+					console.log(response.response[0].name);
+				  carrierName = response.response[0].name;
 										}
 									});
-							
-
 }
 
-function getorigincitycode()
-{
-  var origin = $("#origin").val();
-  <!-- alert("key pressed :"+origin); -->
- var origin_array = [];
- $.ajax({
-                type: "GET",
-                url: "https://iatacodes.org/api/v6/autocomplete.jsonp?api_key=a33d6719-c3bb-469c-8747-12da8ff944f3&query="+origin+"",
-                cache: false,
-                crossDomain: true,
-                dataType: "jsonp",
-                success: function (response) {
-                    var str = response;
-					 <!-- console.log(str);  -->
-							
-					<!-- var tt; -->
-					for (i in str)
-                    {
-                      <!-- console.log(str[i].airports); -->
-					   var obj = str[i].airports;
-					   var obj2 = str[i].cities;
-
-					   for(j in obj , obj2){
-					     <!-- console.log(obj[j].code);  -->
-						  <!-- console.log(obj[j].name); -->
-							<!-- console.log(obj[j].country_name); -->
-							code = obj[j].code;
-							country = obj[j].country_name;
-							airport = obj[j].name;
-							city = obj2[j].name;
-							<!-- document.getElementById("citycode").innerHTML ="Country : " +country; -->
-							<!-- document.getElementById("country").innerHTML ="City Code : " + code; -->
-							<!-- document.getElementById("airport").innerHTML ="Airport : " + airport; -->
-							
-
-							<!-- console.log(destination_array.join()); -->
-							origin_array.splice(j, 0, city +", "+ airport + ", " + country + "~" + code);
-							<!-- console.log(origin_array[j]); -->
-							 <!-- alert("origin array :"+origin_array[j]); -->
-
-						 }
-                    }
-						var sel = document.getElementById('originCode');
-						
-						for(var i = 0; i < origin_array.length; i++) {
-							var opt = document.createElement('option');
-							opt.innerHTML = origin_array[i];
-							opt.value = origin_array[i];
-							sel.appendChild(opt);
-						}
-										}
-									});
-							
-
-}
 
 
 
@@ -359,7 +270,7 @@ for(i in trip_option)
 
 						var dt = leg[l].departureTime;
 						var deptime = dt.substr(dt.indexOf("T") + 1);
-						
+						getflightname(carrier_name1);
 						duration_time= leg[l].duration; 
 							m = duration_time % 60;
 							h = (duration_time-m)/60;
@@ -404,6 +315,7 @@ for(i in trip_option)
 							
 							carrier_name1= segment[k].flight.carrier;
 							carrier_no1= segment[k].flight.number;
+							getflightname(carrier_name1);
 							
 							at = leg[l].arrivalTime;
 							arrival_time1 = at.substr(at.indexOf("T") + 1);
@@ -501,7 +413,7 @@ for(i in trip_option)
 			   }
 			   
 			   
-			      tt =  "<div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+departure_time1+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +origin1+"</p><p>"+carrier_name1+"  "+carrier_no1+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+total_duration+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrival_time2+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+destination2+"</p><p>"+cabin1+"</p></div></center></div><br><br><br><br><br>";
+			      tt =  "<a on><div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+departure_time1+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +origin1+"</p><p>"+carrier_name1+"  "+carrier_no1+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+total_duration+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrival_time2+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+destination2+"</p><p>"+cabin1+"</p></div></center></div></a><br><br><br><br><br>";
 				  $("#wrapper1").append(tt);
 			   }
 			}
@@ -534,7 +446,7 @@ var body = {
 
 	  
     },
-    "solutions": 5,
+    "solutions": 1,
     "refundable": false
   }
  
