@@ -146,8 +146,11 @@ function v()
 	alert("From "+ fromOrigin + " To " + toDestination);
 }
 
-function flightdetails()
-{  }
+function flightdetailpage(flightdetails)
+{ console.log(flightdetails);
+window.location = "flightdetails.html?"+flightdetails+"";}
+
+
 function getflightdetails()
 {
 
@@ -200,7 +203,7 @@ var d = new Date(departureDate);
 	var toDestination = str1.substr(str1.indexOf("~") + 1);
 var request = new XMLHttpRequest();
 
-request.open('POST', 'https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyABcrK1k2gl9EpvwnT8I4mWcDJKrcxjGBk');
+request.open('POST', 'https://www.googleapis.com/qpxExpress/v1/trips/search?key=AIzaSyBEJkQslHR6A1VGAJP320PRbAQKWYNjP_Y');
 //AIzaSyABcrK1k2gl9EpvwnT8I4mWcDJKrcxjGBk
 //AIzaSyBEJkQslHR6A1VGAJP320PRbAQKWYNjP_Y
 request.setRequestHeader('Content-Type', 'application/json');
@@ -212,7 +215,7 @@ request.onreadystatechange = function () {
     <!-- console.log('Headers:', this.getAllResponseHeaders()); -->
     <!-- console.log('Body:', this.responseText); -->
 	 var data = JSON.parse(this.responseText);
-      <!-- console.log(data); -->
+      console.log(data);
 	  <!-- var trip_option= data.trips.tripOption; -->
 <!-- for(i in trip_option) -->
 <!-- { -->
@@ -233,6 +236,7 @@ for(i in trip_option)
 <!-- console.log('trips Option :' , trip_option[i] ,'Price:',trip_option[i].saleTotal); -->
 			var price = trip_option[i].saleTotal;
 			var slice = trip_option[i].slice;
+			var trip_id = trip_option[i].id;
 			
 			for(j in slice){
 			
@@ -247,8 +251,8 @@ for(i in trip_option)
 			  
 			  if(count ==0)
 			  {
-			  g = "<center><p>Non-Stop Flights</p></center>";
-							 $("#nonstop").append(g);
+			  <!-- g = "<center><p>Non-Stop Flights</p></center>"; -->
+							 <!-- $("#nonstop").append(g); -->
 							 count++;
 							 }
 							 
@@ -264,23 +268,38 @@ for(i in trip_option)
 						var info = k +" "+ " Origin "+leg[l].origin +" Destination "+leg[l].destination +" Price: "+ price + " Dep Time :" + leg[l].departureTime + " Carrier "+ segment[k].flight.carrier + "" + segment[k].flight.number;
 						<!-- console.log(info); -->
 						<!-- alert(info); -->
-					
+						origin = leg[l].origin ;
+						destination = leg[l].destination;
+						
+						carrier_name = segment[k].flight.carrier;
+						carrier_no = segment[k].flight.number;
+						
 						var at = leg[l].arrivalTime;
-						var arrtime = at.substr(at.indexOf("T") + 1);
-
-						var dt = leg[l].departureTime;
-						var deptime = dt.substr(dt.indexOf("T") + 1);
-						getflightname(carrier_name1);
+						arrivalTime_Date = leg[l].arrivalTime;
+					    arrival_time = at.substr(at.indexOf("T") + 1);
+						arrival_date = at.substr( 0 , at.indexOf("T")  );
+						
+						 var dt = leg[l].departureTime;
+						 departureTime_Date = leg[l].departureTime;
+						 departure_time = dt.substr(dt.indexOf("T") + 1);
+						 departure_date = dt.substr( 0 , dt.indexOf("T")  );
+						
+						<!-- getflightname(carrier_name1); -->
+						
 						duration_time= leg[l].duration; 
 							m = duration_time % 60;
 							h = (duration_time-m)/60;
 							duration_time = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min";
+						
 						var cabin = segment[k].cabin;
 						mystring = cabin.substr(cabin.lastIndexOf('/')+1); 
 						var newchar = ' ';
+						flightdetails = "user=" + user_id + "&email=" +email+ "&fbpic=" + fbpic+ "&trip_id=" +trip_id+ "&origin="+origin+"&destination="+destination+"&arrivalTime_Date="+arrivalTime_Date+"&arrival_time="+arrival_time+"&departureTime_Date="+departureTime_Date+"&departure_time="+departure_time+"&carrier_name="+carrier_name+"&carrier_no="+carrier_no+"&duration_time="+duration_time+"&cabin="+cabin+"&price="+ price+ "&stop=0"+"total_duration=" + total_duration ;
+						
+						
 						cabin = mystring.split('_').join(newchar);
 						
-                       tt =  "<a onclick='flightdetails()'><div class='col-md-12 col-sm-12 col-xs-12' style='margin-bottom: 5px;background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white;'><center><div class='col-md-4 col-sm-4 col-xs-4'> <p id='deptime'>"+deptime+"</p><p id='deptorigin'><img src='img/flightdep.png'/> "+leg[l].origin +"</p><p>"+segment[k].flight.carrier+"  "+segment[k].flight.number+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr> </p><p id='flightstops'>"+duration_time+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>"+arrtime+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+leg[l].destination+"</p><p>"+cabin+"</p></div></center></div></a>";
+                       tt =  "<a onclick='flightdetailpage("+flightdetails+")'><div class='col-md-12 col-sm-12 col-xs-12' style='margin-bottom: 5px;background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white;'><center><div class='col-md-4 col-sm-4 col-xs-4'> <p id='deptime'>"+departure_time+"</p><p id='deptorigin'><img src='img/flightdep.png'/> "+origin+"</p><p>"+departure_date+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p>"+carrier_name+"  "+carrier_no+"</p><p id='flightstops'><hr> </p><p id='flightstops'>"+duration_time+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>"+arrival_time+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+destination+"</p><p>"+arrival_date+"</p></div></center></div></a>";
                        $("#wrapper").append(tt);
 							
 						}
@@ -315,13 +334,17 @@ for(i in trip_option)
 							
 							carrier_name1= segment[k].flight.carrier;
 							carrier_no1= segment[k].flight.number;
-							getflightname(carrier_name1);
+							<!-- getflightname(carrier_name1); -->
 							
 							at = leg[l].arrivalTime;
+							arrivalTime_Date1 = leg[l].arrivalTime;
 							arrival_time1 = at.substr(at.indexOf("T") + 1);
-
+							arrival_date1 = at.substr( 0 , at.indexOf("T")  );
+							
 							dt = leg[l].departureTime;
+							departureTime_Date1 = leg[l].departureTime;
 							departure_time1 = dt.substr(dt.indexOf("T") + 1);		
+							departure_date1 = dt.substr( 0 , dt.indexOf("T")  );
 							
 							price = trip_option[i].saleTotal;
 							
@@ -362,10 +385,14 @@ for(i in trip_option)
 							carrier_no2= segment[k].flight.number;
 							
 							at = leg[l].arrivalTime;
+							arrivalTime_Date2 = leg[l].arrivalTime;
 							arrival_time2 = at.substr(at.indexOf("T") + 1);
-
+							arrival_date2 = at.substr( 0 , at.indexOf("T")  );
+							
 							dt = leg[l].departureTime;
-							departure_time2 = dt.substr(dt.indexOf("T") + 1);		
+							departureTime_Date2 = leg[l].arrivalTime;
+							departure_time2 = dt.substr(dt.indexOf("T") + 1);
+							departure_date3 = dt.substr( 0 , dt.indexOf("T")  );							
 							
 							//price = trip_option[i].saleTotal;
 							
@@ -413,15 +440,185 @@ for(i in trip_option)
 			   }
 			   
 			   
-			      tt =  "<a on><div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+departure_time1+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +origin1+"</p><p>"+carrier_name1+"  "+carrier_no1+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+total_duration+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrival_time2+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+destination2+"</p><p>"+cabin1+"</p></div></center></div></a><br><br><br><br><br>";
+			      tt =  "<a href='flightdetails.html?user="+user_id+"&email="+email+"&fbpic="+fbpic+"&trip_id="+trip_id+"&origin1="+origin1+"&destination1="+destination1+"&arrivalTime_Date1="+arrivalTime_Date1+"&arrival_time1="+arrival_time1+"&departureTime_Date1="+departureTime_Date1+"&deperture_time1="+departure_time1+"&carrier_name1="+carrier_name1+"&carrier_no1="+carrier_no1+"&duration_time1="+duration_time1+"&cabin1="+cabin1+"&price="+price+"&stop=1&total_duration="+total_duration+"&origin2="+origin2+"&destination2="+destination2+"&arrivalTime_Date2="+arrivalTime_Date2+"&arrival_time2="+arrival_time2+"&departureTime_Date2="+departureTime_Date2+"&deperture_time2="+departure_time2+"&carrier_name2="+carrier_name2+"&carrier_no2="+carrier_no2+"&duration_time2="+duration_time2+"&cabin1="+cabin2+"&waiting_time="+waiting_time+"'><div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+departure_time1+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +origin1+"</p><p>"+departure_date1+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p>"+carrier_name1+" "+carrier_no1+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+total_duration+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrival_time2+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+destination2+"</p><p>"+arrival_date2+"</p></div></center></div></a><br><br><br><br><br>";
+				  $("#wrapper1").append(tt);
+			   }
+			   else if(segment.length == 3)
+			   {
+			   <!-- alert("connnecting"); -->
+			  
+			    <!-- for(k in segment) -->
+				     for(k= 0; k < segment.length; k++)
+			   {   
+			    <!-- console.log("segment", segment[k]); -->
+				
+					var leg = segment[k].leg;
+					
+							
+							 
+							for(l in leg )
+							{ 
+								
+						//	console.log('Origin',leg[l].origin ,'Destination',leg[l].destination ,'Price: ', price);
+							<!-- var info = k +" "+ " Origin "+leg[l].origin +" Destination "+leg[l].destination +" Price: "+ price + " Dep Time :" + leg[l].departureTime + " Carrier "+ segment[k].flight.carrier + "" + segment[k].flight.number; -->
+							<!-- console.log(info); -->
+							<!-- alert(info); -->
+						
+							
+							if(k == 0){
+							
+							origin1 = leg[l].origin ;
+							destination1= leg[l].destination;
+							
+							carrier_name1= segment[k].flight.carrier;
+							carrier_no1= segment[k].flight.number;
+							<!-- getflightname(carrier_name1); -->
+							
+							at = leg[l].arrivalTime;
+							arrivalTime_Date1 = leg[l].arrivalTime;
+							arrival_time1 = at.substr(at.indexOf("T") + 1);
+							arrival_date1 = at.substr( 0 , at.indexOf("T")  );
+
+							dt = leg[l].departureTime;
+							departureTime_Date1 = leg[l].departureTime;
+							departure_date1 = dt.substr( 0 , dt.indexOf("T")  );							
+							departure_time1 = dt.substr(dt.indexOf("T") + 1);
+							
+							price = trip_option[i].saleTotal;
+							
+							m = total_duration % 60;
+							h = (total_duration-m)/60;
+							total_duration = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min";
+							
+							total_duration = total_duration;
+							
+							con_duration = segment[k].connectionDuration;
+							m = con_duration % 60;
+							h = (con_duration-m)/60;
+
+							waiting_time = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min";
+							duration_time1= leg[l].duration; 
+							m = duration_time1 % 60;
+							h = (duration_time1-m)/60;
+							
+							duration_time1 = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min";
+							cabin1 = segment[k].cabin;
+							mystring = cabin1.substr(cabin1.lastIndexOf('/')+1); 
+							var newchar = ' ';
+							cabin1 = mystring.split('_').join(newchar);
+																		
+						   <!-- tt =  "<center><p style='color: white;'>"+totalduration+"</p></center><div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+deptime+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +leg[l].origin +"</p><p>"+segment[k].flight.carrier+"  "+segment[k].flight.number+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+duration_time+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrtime+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+leg[l].destination+"</p><p>"+cabin+"</p></div></center></div><br><br><br><br><br>"; -->
+						   <!-- $("#wrapper1").append(tt); -->
+							
+
+
+							}
+							 
+					 else if(k == 1){ 
+							 
+							origin2 = leg[l].origin ;
+							destination2= leg[l].destination;
+							
+							carrier_name2= segment[k].flight.carrier;
+							carrier_no2= segment[k].flight.number;
+							
+							at = leg[l].arrivalTime;
+							arrivalTime_Date2 = leg[l].arrivalTime;
+							arrival_time2 = at.substr(at.indexOf("T") + 1);
+							arrival_date2 = at.substr( 0 , at.indexOf("T")  );
+
+							dt = leg[l].departureTime;
+							departureTime_Date2 = leg[l].arrivalTime;
+							departure_time2 = dt.substr(dt.indexOf("T") + 1);		
+							departure_date2 = dt.substr( 0 , dt.indexOf("T")  );
+							//price = trip_option[i].saleTotal;
+							
+							<!-- m = total_duration % 60; -->
+							<!-- h = (total_duration-m)/60; -->
+							<!-- total_duration = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min"; -->
+							
+							<!-- total_duration = "Connecting Flights Stop: 1  Duration :" +total_duration; -->
+							
+							<!-- con_duration = segment[k].connectionDuration; -->
+							<!-- m = con_duration % 60; -->
+							<!-- h = (con_duration-m)/60; -->
+
+							<!-- waiting_time = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min"; -->
+							duration_time2= leg[l].duration; 
+							m = duration_time2 % 60;
+							h = (duration_time2-m)/60;
+							duration_time2 = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min";
+							
+							cabin2 = segment[k].cabin;
+							mystring = cabin2.substr(cabin2.lastIndexOf('/')+1); 
+							var newchar = ' ';
+							cabin2 = mystring.split('_').join(newchar);
+																		
+						   <!-- tt =  "<center><p style='color: white;'>"+totalduration+"</p></center><div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+deptime+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +leg[l].origin +"</p><p>"+segment[k].flight.carrier+"  "+segment[k].flight.number+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+duration_time+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrtime+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+leg[l].destination+"</p><p>"+cabin+"</p></div></center></div><br><br><br><br><br>"; -->
+						   <!-- $("#wrapper1").append(tt); -->
+							 
+							 }
+							 
+							 
+							else if(k == 2){ 
+							 
+							origin3 = leg[l].origin ;
+							destination3= leg[l].destination;
+							
+							carrier_name3= segment[k].flight.carrier;
+							carrier_no3= segment[k].flight.number;
+							
+							at = leg[l].arrivalTime;
+							arrivalTime_Date3 = leg[l].arrivalTime;
+							arrival_time3 = at.substr(at.indexOf("T") + 1);
+							arrival_date3 = at.substr( 0 , at.indexOf("T")  );
+							
+							dt = leg[l].departureTime;
+							departureTime_Date3 = leg[l].arrivalTime;
+							departure_time3 = dt.substr(dt.indexOf("T") + 1);		
+							departure_date3 = dt.substr( 0 , dt.indexOf("T")  );
+							
+							//price = trip_option[i].saleTotal;
+							
+							<!-- m = total_duration % 60; -->
+							<!-- h = (total_duration-m)/60; -->
+							<!-- total_duration = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min"; -->
+							
+							<!-- total_duration = "Connecting Flights Stop: 1  Duration :" +total_duration; -->
+							
+							<!-- con_duration = segment[k].connectionDuration; -->
+							<!-- m = con_duration % 60; -->
+							<!-- h = (con_duration-m)/60; -->
+
+							<!-- waiting_time = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min"; -->
+							duration_time3 = leg[l].duration; 
+							m = duration_time3 % 60;
+							h = (duration_time3-m)/60;
+							duration_time3 = h.toString() + " h " + (m<10?"0":"") + m.toString() + " min";
+							
+							cabin3 = segment[k].cabin;
+							mystring = cabin3.substr(cabin3.lastIndexOf('/')+1); 
+							var newchar = ' ';
+							cabin3 = mystring.split('_').join(newchar);
+																		
+						   <!-- tt =  "<center><p style='color: white;'>"+totalduration+"</p></center><div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+deptime+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +leg[l].origin +"</p><p>"+segment[k].flight.carrier+"  "+segment[k].flight.number+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p id='flightstops'><hr></p><p id='flightstops'>"+duration_time+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrtime+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+leg[l].destination+"</p><p>"+cabin+"</p></div></center></div><br><br><br><br><br>"; -->
+						   <!-- $("#wrapper1").append(tt); -->
+							 
+							 }
+							 
+							
+						}
+						
+			   }
+			   
+			   
+			      tt =  "<a href='flightdetails.html?user="+user_id+"&email="+email+"&fbpic="+fbpic+"&trip_id="+trip_id+"&origin1="+origin1+"&destination1="+destination1+"&arrivalTime_Date1="+arrivalTime_Date1+"&arrival_time1="+arrival_time1+"&departureTime_Date1="+departureTime_Date1+"&deperture_time1="+departure_time1+"&carrier_name1="+carrier_name1+"&carrier_no1="+carrier_no1+"&duration_time1="+duration_time1+"&cabin1="+cabin1+"&price="+price+"&stop=2&total_duration="+total_duration+"&origin2="+origin2+"&destination2="+destination2+"&arrivalTime_Date2="+arrivalTime_Date2+"&arrival_time2="+arrival_time2+"&departureTime_Date2="+departureTime_Date2+"&deperture_time2="+departure_time2+"&carrier_name2="+carrier_name2+"&carrier_no2="+carrier_no2+"&duration_time2="+duration_time2+"&cabin1="+cabin2+"&waiting_time="+waiting_time+"&origin3="+origin3+"&destination3="+destination3+"&arrivalTime_Date3="+arrivalTime_Date3+"&arrival_time3="+arrival_time3+"&departureTime_Date3="+departureTime_Date3+"&deperture_time3="+departure_time3+"&carrier_name3="+carrier_name3+"&carrier_no3="+carrier_no3+"&duration_time3="+duration_time3+"&cabin3="+cabin3+"'><div class='col-md-12 col-sm-12 col-xs-12' style='background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white; margin-bottom:5px;'><center><div class='col-md-4 col-sm-4 col-xs-4'><p id='deptime'>"+departure_time1+"</p><p id='deptorigin'><img src='img/flightdep.png'/>" +origin1+"</p><p>"+departure_date1+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='flightduration'>"+price+"</p><p><hr>"+carrier_name1+"  "+carrier_no1+"<hr></p><p id='flightstops'>"+total_duration+"</p></div><div class='col-md-4 col-sm-4 col-xs-4' > <p id='arrivaltime'>" +arrival_time3+"</p><p id='arrivaldest'><img src='img/flightarrival.png'/>"+destination3+"</p><p>"+arrival_date3+"</p></div></center></div></a><br><br><br><br><br>";
 				  $("#wrapper1").append(tt);
 			   }
 			}
-		
 			
  }
  
-
   }	
 };
 
@@ -446,7 +643,7 @@ var body = {
 
 	  
     },
-    "solutions": 1,
+    "solutions": 5,
     "refundable": false
   }
  
