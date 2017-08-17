@@ -136,11 +136,34 @@ function v()
  <!-- <!-- alert(flightdetails); --> -->
  <!-- window.location ="flightdetails.html?"+flightdetails+""; -->
  <!-- } -->
- 
+function bookhotel(hoteldetails)
+{
+
+ $.ajax({
+                    type: "POST",
+                    url: "http://govirtualstore.com/app/iOS/hotelbooking.php",
+                    data: hoteldetails,
+                    crossDomain: true,
+                    cache: false,
+                    dataType: "json",
+                    complete: function (data) {
+						console.log(data);
+						var str= data;	
+					
+			
+			   alert("Hotel Booking Request has been sent" );
+			   window.location="categories.html?user="+user_id+"&email="+email+"&fbpic="+fbpic+"";
+			
+                    }
+					
+                });
+
+}
  
  function hotelresults(){
  
 var hotel_id = getParameterByName('hotel_id'); 
+
 var CurrencyRates= getParameterByName('CurrencyRates'); 
 
 
@@ -207,7 +230,10 @@ request.onreadystatechange = function () {
 	    
 		var exchange_price = price / CurrencyRates;
 		exchange_price = exchange_price.toFixed(2);		
-	   tt ="<div style='margin-bottom: 5px;background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white; padding: 5px;'><br><center><p  style='color: white; font-size: large;font-weight: 600;'><img src='img/hotelnameicon.png'/>&nbsp "+hotelname+"</p><img src='"+thumbnail+"' id='img' style='width:95%'><p  style='color: white; font-size: medium;'>Description:</p><p  style='color: white; font-size: small;'>"+description+"</p><p  style='color: white; font-size: medium;'>Location:</p><p  style='color: white; font-size: small;'>"+address+", "+city+", "+country+"</p><p  style='color: white;font-size: medium;'>USD $&nbsp "+exchange_price+"</p><p  style='color: white; font-size: small;'>Rating:&nbsp "+stars+"/5</p></center><br></div>";
+		
+		hoteldetails = "email=" +email+ "&hotel_id="+ hotel_id +"&hotel_name="+hotelname+"&price="+exchange_price+" USD";
+		
+	   tt ="<div style='margin-bottom: 5px;background-color:rgba(255, 160, 18, 0.5); border-radius: 10px !important; text-shadow: none;color: white; padding: 5px;'><br><center><p  style='color: white; font-size: large;font-weight: 600;'><img src='img/hotelnameicon.png'/>&nbsp "+hotelname+"</p><img src='"+thumbnail+"' id='img' style='width:95%'><p  style='color: white; font-size: medium;'>Description:</p><p  style='color: white; font-size: small;'>"+description+"</p><p  style='color: white; font-size: medium;'>Location:</p><p  style='color: white; font-size: small;'>"+address+", "+city+", "+country+"</p><p  style='color: white;font-size: medium;'>USD $&nbsp "+exchange_price+"</p><p  style='color: white; font-size: small;'>Rating:&nbsp "+stars+"/5</p></center><br></div><br><a onclick='bookhotel(\""+hoteldetails+"\")'><button id='btn' type='button' class='btn btn-primary' style=' background: #333;width: 100%;  border-color: black; text-shadow: none; color: white;' >Book Hotel</button></a> ";
        $("#wrapper").append(tt);
 	
 
@@ -238,7 +264,9 @@ request.send(null);
 
 	function callhotelresult()
 {   
-		
+		var email = getParameterByName('email'); 
+var fbpic = getParameterByName('fbpic'); 
+<!-- alert(email); -->
 	<!-- $("#loadertxt").hide(); -->
 	<!-- $("#loader").hide(); -->
 	<!-- var destination =getParameterByName('destination');   -->
@@ -319,7 +347,7 @@ request.send(null);
 						
 						<div id="loader" class="ball"></div>
 						<br>
-					<center><p style="color:white;" id="loadertxt">Searching hotels ...</p></center>
+					<center><p style="color:white;" id="loadertxt">Fetching hotel details...</p></center>
 				
                            <!-- <div> <input style="color: black;" placeholder="Flying From" type="text" id="origin"  list="originCode" onkeyup="getorigincitycode();"/> -->
 						<!-- <datalist id="originCode"> -->

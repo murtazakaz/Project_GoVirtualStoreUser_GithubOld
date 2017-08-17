@@ -159,11 +159,13 @@ function search_hotels()
 	  {
 		 if ($.trim(checkinDate).length > 0 && $.trim(checkoutDate).length > 0   )
 		
-		{  
-		
+		{
+
+				if(checkinDate <= checkoutDate)
+		{
 		    console.log("city code: ",toDestination,"adult: ",adultcount,"childrencount: ",childrencount,"checkin: ",checkinDate,"checkoutDate: ",checkoutDate);
 				window.location="hotelsearchresults.html?user="+user_id+"&email="+email+"&fbpic="+fbpic+"&destination="+toDestination+"&adultcount="+adultcount+"&childrencount="+childrencount+"&checkinDate="+checkinDate+"&checkoutDate="+checkoutDate+"";
-				
+				} else{alert("Invalid Checkin and Checkout dates ");}
 		}else{ alert("Please provide Checkin and Checkout Date");}
 	
 	}else{ alert("Please provide Hotel Destination city");}
